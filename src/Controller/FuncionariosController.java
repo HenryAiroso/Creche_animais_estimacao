@@ -1,7 +1,6 @@
 package Controller;
 
 import Bean.FuncionariosBean;
-import Model.AnimaisModel;
 import Model.FuncionariosModel;
 import opcoes.Opcoes;
 import org.neo4j.driver.Driver;
@@ -41,15 +40,14 @@ public class FuncionariosController {
             System.out.print("Observacoes: ");
             String observacoes = input.nextLine();
 
-            // Parse date strings to LocalDate
 
 
-            // Cypher query to create a new Funcionario node
+            // Cria o nó funcionarios
             String cypherQuery = "CREATE (f:Funcionario {nome: $nome, sobrenome: $sobrenome, dataNascimento: $dataNascimento, " +
                     "cpf: $cpf, telefone: $telefone, email: $email, dataContratacao: $dataContratacao, status: $status, " +
                     "observacoes: $observacoes})";
 
-            // Set parameters
+            // Set dos parametros
             session.run(cypherQuery, parameters(
                     "nome", nome_funcionario,
                     "sobrenome", sobrenome_funcionario,
@@ -102,6 +100,7 @@ public class FuncionariosController {
 
             if (existingFuncionario == null) {
                 System.out.println("Funcionário não encontrado.");
+                Opcoes.showMenu(driver);
                 return;
             }
 
@@ -148,6 +147,8 @@ public class FuncionariosController {
             ));
 
             System.out.println("Funcionário atualizado com sucesso!");
+            Opcoes.showMenu(driver);
+
         }
     }
 

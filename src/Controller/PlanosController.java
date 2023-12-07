@@ -24,15 +24,15 @@ public class PlanosController {
             System.out.print("Descricao Plano: ");
             String descricao_plano = input.nextLine();
             System.out.print("Duracao Plano: ");
-            int duracao_plano = input.nextInt();
+            int duracao_plano = Integer.parseInt(input.nextLine());
             System.out.print("Tipo Acomodacao: ");
-            String tipo_acomodacao = input.next();
+            String tipo_acomodacao = input.nextLine();
             System.out.print("Preco Plano: ");
-            double preco_plano = input.nextDouble();
+            double preco_plano = Double.parseDouble(input.nextLine());
             System.out.print("Restricao Especie: ");
-            String restricao_especie = input.next();
+            String restricao_especie = input.nextLine();
             System.out.print("Disponibilidade: ");
-            String disponibilidade = input.next();
+            String disponibilidade = input.nextLine();
 
             // Cypher query to create a new Plano node
             String cypherQuery = "CREATE (p:Plano {nome_plano: $nome_plano, descricao_plano: $descricao_plano, " +
@@ -113,7 +113,7 @@ public class PlanosController {
         existingPlano.setDisponibilidade(input.nextLine());
 
         try (Session session = driver.session()) {
-//Cypher query to update the Plano node
+        //Cypher query para atualizar o nó
             String updateQuery = "MATCH (p:Plano) WHERE id(p) = $id_plano " +
                     "SET p.nome_plano = $nome_plano, " +
                     "p.descricao_plano = $descricao_plano, " +
@@ -123,7 +123,6 @@ public class PlanosController {
                     "p.restricao_especie = $restricao_especie, " +
                     "p.disponibilidade = $disponibilidade";
 
-// Set parameters
             session.run(updateQuery, parameters(
                     "id_plano", id_plano,
                     "nome_plano", existingPlano.getNome_plano(),
@@ -138,6 +137,8 @@ public class PlanosController {
 
             PlanosModel.update(existingPlano, driver);
             System.out.println("Plano atualizado com sucesso!");
+            Opcoes.showMenu(driver);
+
         }
     }
 
@@ -148,7 +149,7 @@ public class PlanosController {
             System.out.print("Digite o ID do Plano que deseja excluir: ");
             int id_plano = input.nextInt();
 
-            // Cypher query to check if the Plano exists
+            // Cypher query plano existe?
             String checkQuery = "MATCH (p:Plano) WHERE id(p) = $id_plano RETURN p";
             Result checkResult = session.run(checkQuery, parameters("id_plano", id_plano));
             if (!checkResult.hasNext()) {
@@ -156,16 +157,14 @@ public class PlanosController {
                 return;
             }
 
-            // Cypher query to check if the Plano is associated with any Reserva
-            String reservaQuery = "MATCH (p:Plano)-[:ASSOCIATED_WITH]->(r:Reserva) WHERE id(p) = $id_plano RETURN r";
+            // Plano associado a reserva?
+            String reservaQuery = "MATCH (p:Plano)-[:alocado_a_reserva]->(r:Reserva) WHERE id(p) = $id_plano RETURN r";
             Result reservaResult = session.run(reservaQuery, parameters("id_plano", id_plano));
             if (reservaResult.hasNext()) {
                 System.out.println("Não é possível excluir o plano, pois ele está associado a uma reserva.");
                 return;
             }
-
-
-            System.out.print("Deseja excluir o ANIMAL? (S/N): ");
+            System.out.print("Deseja excluir o Plano? (S/N): ");
             String choice = input.next();
             if (choice.equalsIgnoreCase("S")) {
                 String deleteQuery = "MATCH (p:Plano) WHERE id(p) = $id_plano DELETE p";
@@ -175,6 +174,8 @@ public class PlanosController {
             }
             System.out.println("Exclusão cancelada, voltar ao Menu!");
             Opcoes.showMenu(driver);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -98,7 +98,7 @@ public class PlanosModel {
 
     public static void delete(int id_plano, Driver driver) {
         try (Session session = driver.session()) {
-            String cypherQuery = "MATCH (p:Plano) WHERE p.id = $id_plano DELETE p"; // Update this line            session.run(cypherQuery, parameters("id_plano", id_plano));
+            String cypherQuery = "MATCH (p:Plano) WHERE p.id = $id_plano DELETE p";
         } catch (Exception e) {
             e.printStackTrace();
         }

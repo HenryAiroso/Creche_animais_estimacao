@@ -33,7 +33,7 @@ public class AnimaisController {
         System.out.print("Sexo Animal: ");
         String sexo_animal = input.nextLine();
         System.out.print("Observacao: ");
-        String observacao = input.nextLine(); // Use nextLine() to allow multiple words
+        String observacao = input.nextLine(); // Use nextLine() Paara permitir multiplas palavras
 
 
         System.out.println("Clientes disponíveis:");
@@ -137,7 +137,7 @@ public class AnimaisController {
         }
 
 
-        // Ask if the user wants to return to the menu
+        // Validação retorno menu
         System.out.print("Deseja excluir o ANIMAL? (S/N): ");
         String choice = input.next();
         if (choice.equalsIgnoreCase("S")) {

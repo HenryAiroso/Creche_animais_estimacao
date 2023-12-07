@@ -2,6 +2,7 @@ package GerarRelatorios;
 
 import Controller.AnimaisController;
 import Controller.FuncionariosController;
+import Controller.ReservasController;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.*;
 import org.neo4j.driver.types.Node;
@@ -80,6 +81,8 @@ public class GerarRelatorio {
         try (Session session = driver.session()) {
             Scanner scanner = new Scanner(System.in);
             new AnimaisController().listarAnimais(driver);
+            System.out.print("\nVerifique se o animal está contido em alguma reserva antes de inserir:\n ");
+            new ReservasController().listarReservas(driver);
             System.out.print("Digite o ID do animal: ");
             int id_animal = scanner.nextInt();
 

@@ -317,17 +317,18 @@ public class ReservasController {
 
             try (Session session = driver.session()) {
 
-                System.out.print("Deseja excluir o ANIMAL? (S/N): ");
+                System.out.print("Deseja excluir a Reserva? (S/N): ");
                 String choice = input.next();
 
                 if (choice.equalsIgnoreCase("S")) {
-                    String query = "MATCH (r:Reserva) WHERE id(r) = $idReserva DELETE r";
+                    String query = "MATCH (r:Reserva)-[rel]-() WHERE id(r) = $idReserva DELETE r, rel";
                     session.run(query, Values.parameters("idReserva", idReserva));
-                    System.out.println("Plano excluído com sucesso!");
+                    System.out.println("Reserva excluída com sucesso!");
                     Opcoes.showMenu(driver);
                 }
                 System.out.println("Exclusão cancelada, voltar ao Menu!");
                 Opcoes.showMenu(driver);
+
 
 
             }

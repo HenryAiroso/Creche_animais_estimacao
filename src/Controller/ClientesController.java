@@ -90,7 +90,7 @@ public class ClientesController {
 
     public void createClientes(Driver driver) {
         try (Scanner input = new Scanner(System.in)) {
-            System.out.println("Enter the following data to create a new client: ");
+            System.out.println("Insira as informações para criar um cliente: ");
 
             int cpf;
             while (true) {
@@ -98,15 +98,15 @@ public class ClientesController {
                 if (input.hasNextInt()) {
                     cpf = Integer.parseInt(input.nextLine());
 
-                    // Check if the client already exists
+                    // Cliente existe?
                     if (findById(cpf, driver) != null) {
-                        System.out.println("Client with CPF " + cpf + " already exists. Cannot create again.");
+                        System.out.println("Client com CPF " + cpf + " já existe");
                     } else {
                         break;
                     }
                 } else {
-                    System.out.println("Invalid input. Please enter a valid CPF.");
-                    input.nextLine(); // consume the invalid input
+                    System.out.println("CPF INVALIDO.");
+                    input.nextLine(); // caso cpf invalido
                 }
             }
 
@@ -129,9 +129,8 @@ public class ClientesController {
 
             ClientesBean cliente = new ClientesBean(cpf, nome, sobrenome, email, rua, cidade, estado, pais, telefone);
 
-            // Create the client in Neo4j
+            // Cria o nó
             create(cliente, driver);
-            // Ask the user for the next action
             System.out.print("Criado com sucesso!");
 
             Opcoes opcoes = new Opcoes();
@@ -150,6 +149,7 @@ public class ClientesController {
     }
 
     public void updateClientes(Driver driver) {
+        listarClientes(driver);
         try (Scanner input = new Scanner(System.in)) {
             System.out.print("Insira o CPF para o cliente que gostaria de atualizar: ");
             int cpf = Integer.parseInt(input.nextLine());
@@ -158,6 +158,8 @@ public class ClientesController {
             ClientesBean existingCliente = findById(cpf, driver);
             if (existingCliente == null) {
                 System.out.println("Cliente com  CPF " + cpf + " não encontrado.");
+                Opcoes.showMenu(driver);
+
                 return;
             }
 
@@ -207,14 +209,14 @@ public class ClientesController {
             System.out.print("Insira o Cpf do Cliente que gostaria de excluir: ");
             int cpf = input.nextInt();
 
-            // Check if the client exists
+            //cliente existe?
             ClientesBean existingCliente = findById(cpf, driver);
             if (existingCliente == null) {
                 System.out.println("Cliente com CPF " + cpf + " não encontrado.");
                 return;
             }
 
-            // Check if the client has associated animals
+            // cliente associado a algum animal?
             if (isClientesInAnimais(cpf, driver)) {
                 System.out.println("Cliente com CPF " + cpf + " possui um animal associado. Por favor, excluir o animal antes de deletar cliente.");
                 return;
